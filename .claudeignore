@@ -1,0 +1,30 @@
+# Entorno virtual Python
+pipeline/.venv/
+
+# Dependencias Node
+web/node_modules/
+
+# Build de Next.js
+web/.next/
+
+# Cachés de Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+
+# Archivos de datos grandes
+**/*.csv
+**/*.parquet
+**/*.pickle
+**/*.pkl
+
+# Logs locales
+pipeline/logs/
+
+# Archivos de cobertura y reportes de tests
+.coverage
+htmlcov/
+web/coverage/
+
+# DVC cache (artefactos versionados, no código)
+.dvc/cache/

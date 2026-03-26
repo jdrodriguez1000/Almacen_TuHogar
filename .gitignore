@@ -1,0 +1,122 @@
+# ============================================================
+# .gitignore — Dashboard Almacen TuHogar (Triple S)
+# Python + Node.js/Next.js + entornos virtuales
+# ============================================================
+
+# ------------------------------------------------------------
+# Python — Entorno Virtual
+# ------------------------------------------------------------
+pipeline/.venv/
+
+# ------------------------------------------------------------
+# Python — Cachés y compilados
+# ------------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pycache
+
+# ------------------------------------------------------------
+# Python — Empaquetado y distribución
+# ------------------------------------------------------------
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# ------------------------------------------------------------
+# Python — Testing y cobertura
+# ------------------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage/
+
+# ------------------------------------------------------------
+# Python — Herramientas
+# ------------------------------------------------------------
+.mypy_cache/
+.ruff_cache/
+.black_cache/
+
+# ------------------------------------------------------------
+# Node.js / Next.js
+# ------------------------------------------------------------
+node_modules/
+.next/
+out/
+.turbo/
+
+# ------------------------------------------------------------
+# Variables de entorno (NUNCA commitear secretos)
+# ------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+pipeline/.env
+
+# ------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ------------------------------------------------------------
+# Sistema operativo
+# ------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ------------------------------------------------------------
+# Datasets y artefactos de datos (versionados con DVC)
+# NOTA: Los archivos .dvc SI se trackean en Git.
+# Solo se ignoran los datos crudos locales.
+# ------------------------------------------------------------
+/data/
+*.csv
+*.parquet
+*.pickle
+*.pkl
+*.feather
+*.h5
+*.hdf5
+
+# DVC cache interno (no el .dvc descriptor)
+.dvc/cache/
+.dvc/tmp/
+
+# ------------------------------------------------------------
+# Pipeline — Estado local de ejecucion
+# ------------------------------------------------------------
+pipeline/latest
+
+# ------------------------------------------------------------
+# IDEs y editores
+# ------------------------------------------------------------
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# ------------------------------------------------------------
+# Miscelaneo
+# ------------------------------------------------------------
+*.bak
+*.tmp
+*.temp
