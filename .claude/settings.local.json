@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(git init:*)",
-      "Bash(git remote:*)"
+      "Bash(git remote:*)",
+      "Bash(find /c/Users/USUARIO/Documents/Dashboards/Almacen_TuHogar/.claude -type f -name *session*)",
+      "Bash(mkdir -p \"C:\\\\Users\\\\USUARIO\\\\Documents\\\\Dashboards\\\\Almacen_TuHogar\\\\.claude\\\\skills\\\\session-close-handoff\")",
+      "Bash(mkdir -p \"C:\\\\Users\\\\USUARIO\\\\Documents\\\\Dashboards\\\\Almacen_TuHogar\\\\.claude\\\\skills\\\\session-close-lessons\")",
+      "Bash(find /c/Users/USUARIO/Documents/Dashboards/Almacen_TuHogar/docs -type f -name *.md)"
     ]
   }
 }

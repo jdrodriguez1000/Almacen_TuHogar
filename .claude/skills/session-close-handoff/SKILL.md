@@ -1,6 +1,6 @@
 ---
-name: session-close
-description: "Ejecuta el protocolo de cierre de sesión reescribiendo PROJECT_handoff.md con el estado macro completo del proyecto más el estado táctico exacto de la sesión. USAR SIEMPRE que el usuario indique fin de sesión, ya sea explícitamente ('Terminamos', 'Cerramos', 'Hasta luego', 'Eso es todo', 'Listo por hoy', 'Done', 'Bye', 'That's it') o implícitamente (despedida, resumen de lo que se hizo, pregunta sobre qué falta). No esperar a que el usuario diga la palabra exacta — ante cualquier señal de cierre, ejecutar este protocolo de inmediato."
+name: session-close-handoff
+description: "Reescribe PROJECT_handoff.md con el estado macro completo del proyecto y el estado táctico exacto de la sesión. USAR cuando el usuario indique fin de sesión o quiera guardar el estado del proyecto — ya sea explícitamente ('Terminamos', 'Cerramos', 'Hasta luego', 'actualiza el handoff', 'guarda el estado', 'session-close-handoff') o implícitamente (despedida, resumen de lo hecho, pregunta sobre qué falta). No esperar la frase exacta — ante cualquier señal de cierre, ejecutar este protocolo de inmediato."
 invocation: user
 triggers:
   - terminamos
@@ -13,13 +13,16 @@ triggers:
   - that's it
   - bye
   - nos vemos
+  - actualiza el handoff
+  - guarda el estado
+  - session-close-handoff
   - PROJECT_handoff
   - handoff
 ---
 
-# Skill: /session-close
+# Skill: /session-close-handoff
 
-Tu objetivo es reescribir `PROJECT_handoff.md` en la raíz del proyecto con el estado completo del proyecto al momento de cerrar la sesión. Este archivo es el **único punto de verdad de estado**. La próxima sesión solo necesita leer este archivo para arrancar con contexto completo.
+Tu objetivo es reescribir `PROJECT_handoff.md` en la raíz del proyecto con el estado completo del proyecto al cierre de sesión. Este archivo es el **único punto de verdad de estado**: la próxima sesión solo necesita leerlo para arrancar con contexto completo.
 
 > Reglas de comportamiento y protocolos: ver **CLAUDE.md**.
 
@@ -28,7 +31,7 @@ Tu objetivo es reescribir `PROJECT_handoff.md` en la raíz del proyecto con el e
 ## Paso 1 — Leer el estado actual
 
 Lee `PROJECT_handoff.md` existente (si existe). Extrae y preserva **íntegramente**:
-- La sección **§5 Notas y Decisiones Registradas** — es append-only, jamás se sobreescribe ni se trunca.
+- La sección **§5 Notas y Decisiones Registradas** — es append-only, jamás se sobrescribe ni se trunca.
 - La sección **§2 Hitos del Proyecto** — actualiza solo los ítems que cambiaron en esta sesión.
 - La sección **§3 Mapa de Arquitectura** — actualiza solo las filas que cambiaron en esta sesión.
 - La sección **§4 Índice SDD** — actualiza estado de documentos si se crearon o completaron en esta sesión.
@@ -57,7 +60,7 @@ Analiza la conversación completa para extraer:
 Muestra un resumen breve en el chat antes de escribir:
 
 ```
-Cerrando sesión:
+Cerrando sesión — Handoff:
 - Fase/Etapa: [fase y etapa]
 - Archivos activos: [lista]
 - Contexto: [1-2 líneas]
@@ -161,41 +164,16 @@ Usa exactamente la siguiente estructura al escribir el archivo:
 
 ---
 
-## Paso 4 — Actualizar Lecciones Aprendidas
+## Paso 4 — Confirmación final
 
-Tras escribir `PROJECT_handoff.md`, actualiza `docs/lessons/lessons-learned.md`:
-
-1. Lee el archivo. Si no existe, créalo con la estructura base del proyecto.
-2. Localiza la sección de la **Fase y Etapa activa** (ej. `## Fase 2 — Etapa 2.1`). Si no existe, créala.
-3. Añade una nueva entrada de sesión:
-
-```markdown
-### Sesión: [fecha actual]
-
-**✅ Lo que funcionó bien:**
-- [Decisiones, herramientas o enfoques que resultaron positivos]
-
-**⚠️ Lo que no funcionó / fricción encontrada:**
-- [Errores, malentendidos, pasos repetidos, decisiones revertidas]
-
-**💡 Decisiones clave tomadas:**
-- [Decisiones de diseño, arquitectura o gobernanza no documentadas previamente]
-```
-
-4. Si la sesión cierra una etapa completa (todas las tareas en `[x]`), añade también:
-
-```markdown
-### 📋 Resumen de la Etapa
-**Lecciones más valiosas:**
-1. [Lección 1 — la más importante para etapas futuras]
-2. [Lección 2]
-3. [Lección 3]
-```
+Tras escribir el archivo:
+1. Confirma: "`PROJECT_handoff.md` actualizado."
+2. Muestra en una línea la Próxima Acción registrada para que el usuario la tenga visible al cerrar.
 
 ---
 
-## Paso 5 — Confirmación final
+## Reglas innegociables
 
-Tras completar ambos pasos:
-1. Confirma: "`PROJECT_handoff.md` y `lessons-learned.md` actualizados."
-2. Muestra en una línea la Próxima Acción registrada para que el usuario la tenga visible al cerrar.
+- La sección **§5 Notas y Decisiones Registradas** jamás se sobrescribe — solo se añade al final.
+- Si no hay notas nuevas en la sesión, la sección se preserva sin modificar.
+- La Próxima Acción debe ser una tarea atómica y específica, nunca genérica como "continuar el desarrollo".

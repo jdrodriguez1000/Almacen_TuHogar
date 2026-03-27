@@ -38,11 +38,12 @@ Flujo: Informar → usuario aprueba → `docs/changes/CC_XXXXX.md` en `Pendiente
 ## Protocolo de Inicio de Sesión
 
 En orden obligatorio:
-1. Leer `CLAUDE.md`
-2. Leer `PROJECT_handoff.md` — Estado macro y táctico.
-3. Leer `docs/lessons/lessons-learned.md` — Solo sección de etapa activa.
-4. Leer `docs/changes/` — Solo CCs en estado `✅ Aprobado`.
-5. Leer `docs/database/schema.sql` — Esquema actual de Supabase.
+1. Leer `.claude/skill-router.md` — Mapear los agentes y skills disponibles. Ante cualquier solicitud del usuario, consultar este archivo primero para identificar el agente y skill responsable. **Prohibido ejecutar flujos de Git, cambios documentales, cierres de etapa o cierre de sesión con lógica propia.**
+2. Leer `CLAUDE.md`
+3. Leer `PROJECT_handoff.md` — Estado macro y táctico.
+4. Leer `docs/lessons/lessons-learned.md` — Solo sección de etapa activa.
+5. Leer `docs/changes/` — Solo CCs en estado `✅ Aprobado`.
+6. Leer `docs/database/schema.sql` — Esquema actual de Supabase.
 
 Solo después está autorizado a escribir código o ejecutar acciones.
 
@@ -98,11 +99,17 @@ Reescribir `PROJECT_handoff.md` con: archivos modificados, contexto inmediato, �
 - **DVC obligatorio**: Datasets y artefactos con DVC, nunca en Git.
 - **SQL-First**: Transformaciones pesadas en SQL, no en Python.
 
-### Testing
-- **TDD obligatorio**: Test primero → código mínimo → refactorizar. Sin excepción.
-  - Tests en `pipeline/tests/` espejando `pipeline/src/`.
-  - Conectores: integration tests contra Supabase real (sin mocks de BD).
-  - `main.py` y orquestadores: tests de integración end-to-end.
+### Desarrollo Web (Next.js)
+- **Separación de Lógica**: Lógica de cálculo o formateo fuera de los componentes (`web/src/utils/` o `web/src/hooks/`) para permitir unit testing puro.
+- **Contratos de API**: Las API Routes deben validar el input contra el Data Contract antes de procesar, con tests que cubran casos de éxito y error (`ERR_WEB_XXX`).
+
+### Testing (TDD Universal)
+- **TDD estrictamente obligatorio**: Rojo (Test falla) → Verde (Código mínimo) → Refactorizar.
+  - **Prohibido** escribir lógica de negocio o componentes UI sin un test previo que falle.
+  - **Pipeline (Python)**: Tests en `pipeline/tests/` usando `pytest`.
+  - **Web (Next.js)**: Tests en `web/tests/` usando Vitest o Jest para lógica y Cypress/Playwright para E2E.
+- **Conectores y API**: Integration tests obligatorios contra Supabase real (sin mocks de DB) tanto en Python como en las API Routes de Next.js.
+- **Componentes Web**: Cada componente en `web/components/` debe tener su archivo de test unitario que valide renderizado y estados.
 
 ### Prefijos de Tablas
 - **`usr_*`**: Propiedad del cliente (solo lectura). No alterar sin CC aprobado.
@@ -120,10 +127,20 @@ Formato atómico en español: `feat:` | `fix:` | `docs:` | `refactor:`
 **Ejemplo**: `feat: ETL Bronze to Silver con conversión UTC-COT`
 
 ### CI/CD
-- Quality Gate en PRs hacia `main`: pytest + npm test + linting (en paralelo).
+- **Quality Gate Mandatorio**: Toda PR hacia `main` debe pasar:
+  1. `pytest pipeline/tests/` (Cobertura mínima 90%).
+  2. `npm run test` (Vitest/Jest para el Frontend).
+  3. `npm run lint` (ESLint + Prettier).
+- **Merge bloqueado**: Si el reporte de cobertura disminuye respecto al commit anterior, el merge se rechaza automáticamente.
 - Release tags semánticos al mergear: `v1.0.0`.
 
-**Comandos**: `python pipeline/main.py --mode [validate|etl|alerts]` | `npm run dev` | `pytest pipeline/tests/` | `npm test`
+### Comandos de Desarrollo
+- **Backend**: `pytest pipeline/tests/`
+- **Frontend**: `npm test` o `npm run test:watch`
+- **E2E**: `npm run e2e` (Pruebas de flujo completo en el Dashboard)
+- **Linting**: `npm run lint` (ESLint + Prettier)
+- **Dev local**: `npm run dev`
+- **Pipeline**: `python pipeline/main.py --mode [validate|etl|alerts]`
 
 ## Convenciones de Idioma
 - **Código/Archivos/Carpetas**: Inglés (snake_case archivos, CamelCase clases).
@@ -136,6 +153,7 @@ Formato atómico en español: `feat:` | `fix:` | `docs:` | `refactor:`
 - **`PROJECT_scope.md`** — Alcance, objetivo, entregables y criterios de éxito.
 - **`docs/database/schema.sql`** — DDL sincronizado con Supabase. Leer antes de implementar.
 - **`docs/changes/`** — CCs formalizados en estado `✅ Aprobado`.
+- **`.claude/skill-router.md`** — Mapa central de agentes y skills. Lectura obligatoria al inicio de sesión. Define qué agente ejecuta cada tipo de tarea.
 
 ## Estructura de Carpetas
 

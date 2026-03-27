@@ -20,6 +20,73 @@ Eres un Director de Proyecto senior comunicando resultados a los dueños del neg
 
 ---
 
+## Paso 0 — Verificar Autorización de Auditoría
+
+**Esta es la primera acción del skill. No se puede omitir.**
+
+Leer el archivo `.claude/audit-token.md`.
+
+**Escenario A — El archivo no existe:**
+
+```
+⛔ CIERRE BLOQUEADO — Auditoría Pendiente
+
+No se encontró un token de auditoría válido para esta etapa.
+El cierre formal requiere que el Auditor de Etapa haya certificado el trabajo completado.
+
+Acción requerida:
+→ Ejecuta /stage-audit para auditar la etapa antes de cerrarla.
+→ Si la auditoría concluye con ✅ CONFORME, vuelve a invocar /close-stage.
+```
+
+Detener. No ejecutar ningún paso adicional.
+
+**Escenario B — El archivo existe pero contiene `BLOQUEADO`:**
+
+```
+⛔ CIERRE BLOQUEADO — Auditoría con Hallazgos Críticos
+
+El Auditor de Etapa emitió un veredicto BLOQUEADO.
+Existen hallazgos críticos que deben resolverse antes del cierre.
+
+Acción requerida:
+→ Consulta el informe de auditoría en el chat del stage-auditor.
+→ Resuelve los hallazgos indicados.
+→ Re-ejecuta /stage-audit para obtener un nuevo token CONFORME.
+```
+
+Detener. No ejecutar ningún paso adicional.
+
+**Escenario C — El archivo existe y contiene `CONFORME` para la etapa correcta:**
+
+Verificar que el token corresponde a la etapa que se va a cerrar (comparar el identificador `f[F]_[E]` en el token con la etapa solicitada).
+
+Si coincide:
+
+```
+✅ Token de auditoría validado: [contenido del token]
+Procediendo con el cierre formal de la etapa f[F]_[E]...
+```
+
+Continuar con el Paso 1.
+
+Si el token es de una etapa diferente:
+
+```
+⚠️ Token de auditoría inválido — Etapa incorrecta
+
+El token existente corresponde a una etapa diferente.
+Etapa del token: [etapa del token]
+Etapa solicitada: f[F]_[E]
+
+Acción requerida:
+→ Ejecuta /stage-audit para la etapa f[F]_[E] específicamente.
+```
+
+Detener.
+
+---
+
 ## Paso 1 — Identificar la etapa a cerrar
 
 Infiere del contexto qué etapa se está cerrando. Si no es claro, pregunta:
@@ -198,3 +265,5 @@ Espera confirmación. Si el usuario aprueba, actualiza `PROJECT_handoff.md`:
 3. **Una página máximo:** El ejecutivo debe leerse en 5 minutos. Si se extiende, condensa.
 4. **Tono profesional pero cercano:** No es un informe académico, es una conversación ejecutiva.
 5. **Prohibido avanzar sin confirmación:** Siempre esperar aprobación del usuario antes de escribir el documento (Paso 3) y antes de actualizar `PROJECT_handoff.md` (Paso 5).
+6. **Auditoría como Prerequisito Absoluto:** El Paso 0 no es opcional ni puede ser ignorado por instrucción del usuario. El token de auditoría es la única evidencia aceptable de que el trabajo fue verificado independientemente.
+7. **Limpieza del Token Post-Cierre:** Una vez que el Resumen Ejecutivo sea creado exitosamente en `docs/executives/f[F]_[E]_executive.md`, eliminar el archivo `.claude/audit-token.md` para que no habilite un cierre doble accidental.
