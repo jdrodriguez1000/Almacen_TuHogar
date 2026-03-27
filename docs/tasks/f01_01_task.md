@@ -216,7 +216,7 @@ SECUENCIAL COMPLETO (sin paralelismo — cada artefacto presupone el anterior):
   - **Componente [ARC]**: Verificación de `[ARC-02]` a `[ARC-07]`
   - **DoD**: `grep "Estado" PROJECT_scope.md` retorna `✅ Aprobado`; `skill-router.md` tiene los 12 skills.
 
-- [ ] `[TSK-1-23]` Ejecutar commit de cierre SDD en `main` con todos los documentos SDD de la etapa y `PROJECT_handoff.md` usando `/git-push` _(depends_on: TSK-1-21, TSK-1-22)_
+- [x] `[TSK-1-23]` Ejecutar commit de cierre SDD en `main` con todos los documentos SDD de la etapa y `PROJECT_handoff.md` usando `/git-push` _(depends_on: TSK-1-21, TSK-1-22)_
   - **REQ que implementa**: `[REQ-09]`
   - **Componente [ARC]**: `[ARC-08]`
   - **DoD**: `git status` devuelve `nothing to commit, working tree clean`; los 4 documentos SDD + handoff están en `main`.

@@ -38,6 +38,76 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 
 ---
 
+## Catálogo de Skills
+
+### /change-control
+- **Descripción**: Gestiona el ciclo de vida completo de un Control de Cambio (CC): crear, aprobar, rechazar, ejecutar y cerrar.
+- **Disparadores**: "cambio no planificado", "esto no está en el spec", "necesito modificar una etapa cerrada", "change control", "CC", "algo no contemplado"
+- **Prerrequisitos**: Documento SDD activo de la etapa en curso o etapa cerrada que se desea modificar.
+- **Produce**: `docs/changes/CC_XXXXX.md` con estado `Pendiente` → `Aprobado` → `Ejecutado`.
+
+### /git-push
+- **Descripción**: Gestiona el ciclo completo de Git: commits, push de ramas y creación de Pull Requests respetando el Git Flow (feat/* → main vía PR con CI).
+- **Disparadores**: "sube a GitHub", "push", "subir al repositorio", "configura el remoto", "publicar rama", "crear PR", "abrir pull request", "commit"
+- **Prerrequisitos**: Cambios staged o archivos listos para commit; remoto configurado para push.
+- **Produce**: Commit en rama activa y/o PR en GitHub.
+
+### /scope-document
+- **Descripción**: Construye o actualiza `PROJECT_scope.md` mediante entrevistas estructuradas con stakeholders. Captura QUÉ se construye, PARA QUIÉN y cómo se medirá el éxito.
+- **Disparadores**: "define el alcance", "crea el scope", "qué vamos a construir", "documenta el alcance", "PROJECT_scope.md"
+- **Prerrequisitos**: Ninguno — es el documento raíz del proyecto.
+- **Produce**: `PROJECT_scope.md` con estado `✅ Aprobado`.
+
+### /sdd-prd
+- **Descripción**: Crea o actualiza el PRD (Product Requirements Document) de una etapa: QUÉ construir, POR QUÉ y cómo medir el éxito.
+- **Disparadores**: "crea el PRD", "escribe los requerimientos", "documenta el alcance de la etapa", "prd", "requerimientos de la etapa"
+- **Prerrequisitos**: `PROJECT_scope.md` aprobado.
+- **Produce**: `docs/reqs/f[F]_[E]_prd.md`
+
+### /sdd-spec
+- **Descripción**: Crea o actualiza la SPEC (Especificación Técnica) de una etapa: CÓMO implementar lo que el PRD define. Incluye arquitectura, esquemas de datos y contratos.
+- **Disparadores**: "crea la spec", "especificación técnica", "diseño técnico", "spec", "definir arquitectura", "esquema de datos"
+- **Prerrequisitos**: PRD aprobado de la etapa (`docs/reqs/f[F]_[E]_prd.md`).
+- **Produce**: `docs/specs/f[F]_[E]_spec.md`
+
+### /sdd-plan
+- **Descripción**: Crea o actualiza el Plan de Implementación de una etapa: ORDEN, DEPENDENCIAS y ESTRATEGIA de ejecución. Define bloques de trabajo, ruta crítica y DoD.
+- **Disparadores**: "crea el plan", "plan de implementación", "orden de desarrollo", "ruta crítica", "bloques de trabajo", "sdd-plan"
+- **Prerrequisitos**: PRD + SPEC aprobados de la etapa.
+- **Produce**: `docs/plans/f[F]_[E]_plan.md`
+
+### /sdd-task
+- **Descripción**: Crea o actualiza la Lista de Tareas de una etapa: checklist atómico y ejecutable que un desarrollador sigue diariamente.
+- **Disparadores**: "crea las tareas", "genera el task list", "qué debo programar", "task list", "checklist de desarrollo", "lista de tareas"
+- **Prerrequisitos**: PRD + SPEC + Plan aprobados de la etapa.
+- **Produce**: `docs/tasks/f[F]_[E]_task.md`
+
+### /stage-audit
+- **Descripción**: Ejecuta la auditoría técnica y documental de una etapa antes de su cierre formal. Verifica DoD, detecta Código Fantasma y emite token CONFORME o BLOQUEADO.
+- **Disparadores**: "audita la etapa", "verificar avance", "check DoD", "auditoría de etapa", "validar tareas", "revisar conformidad", "stage-audit"
+- **Prerrequisitos**: Los 4 documentos SDD de la etapa deben existir (`prd`, `spec`, `plan`, `task`).
+- **Produce**: Reporte de auditoría + token en `.claude/audit-token.md`.
+
+### /close-stage
+- **Descripción**: Cierra formalmente una etapa generando el Resumen Ejecutivo en lenguaje de negocio. Gate obligatorio para avanzar a la siguiente etapa.
+- **Disparadores**: "cerramos la etapa", "terminamos la etapa", "genera el resumen ejecutivo", "close the stage", "finalizar etapa"
+- **Prerrequisitos**: Token CONFORME emitido por `/stage-audit`.
+- **Produce**: `docs/executives/f[F]_[E]_executive.md`
+
+### /session-close-handoff
+- **Descripción**: Reescribe completamente `PROJECT_handoff.md` con el estado macro y táctico actual del proyecto. Primera fase del protocolo de cierre de sesión.
+- **Disparadores**: "terminamos", "cerramos", "hasta luego", "actualiza el handoff", "guarda el estado", fin de sesión implícito o explícito
+- **Prerrequisitos**: Ninguno — puede ejecutarse en cualquier momento de la sesión.
+- **Produce**: `PROJECT_handoff.md` reescrito con estado actual.
+
+### /session-close-lessons
+- **Descripción**: Actualiza `docs/lessons/lessons-learned.md` con las lecciones de la sesión: qué funcionó, qué generó fricción y decisiones clave. Segunda fase del protocolo de cierre.
+- **Disparadores**: "registra las lecciones", "lecciones aprendidas", "retrospectiva", "session-close-lessons"
+- **Prerrequisitos**: Idealmente ejecutado después de `/session-close-handoff`.
+- **Produce**: Nueva entrada en `docs/lessons/lessons-learned.md`.
+
+---
+
 ## Reglas Innegociables
 
 1. **Delegación Obligatoria**: Si el escenario está en la tabla, el agente es la única vía de ejecución. Prohibido resolver la solicitud con lógica propia.

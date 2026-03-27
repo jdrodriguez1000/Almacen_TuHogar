@@ -1,5 +1,9 @@
 # PROJECT_handoff — Estado del Proyecto
 
+> Última actualización: 2026-03-27 COT
+> Sesión: #1
+> Etapa activa: f01_01 — Constitución del Proyecto
+
 > **MANDATO IA:** Este es el unico archivo de estado del proyecto. Leelo PRIMERO al iniciar cada sesion — contiene el estado macro (fases, hitos, arquitectura, decisiones historicas) y el estado tactico de la ultima sesion (que se hizo, bloqueadores, proxima accion).
 
 ---
