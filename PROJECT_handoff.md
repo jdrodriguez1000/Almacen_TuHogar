@@ -1,8 +1,8 @@
 # PROJECT_handoff — Estado del Proyecto
 
 > Última actualización: 2026-03-27 COT
-> Sesión: #1
-> Etapa activa: f01_01 — Constitución del Proyecto
+> Sesión: #2
+> Etapa activa: f01_02 — Validación de Infraestructura
 
 > **MANDATO IA:** Este es el unico archivo de estado del proyecto. Leelo PRIMERO al iniciar cada sesion — contiene el estado macro (fases, hitos, arquitectura, decisiones historicas) y el estado tactico de la ultima sesion (que se hizo, bloqueadores, proxima accion).
 
@@ -11,14 +11,14 @@
 ## 1. Coordenadas Actuales
 
 - **Fase Activa:** `Fase 1 — Gobernanza y Cimientos`
-- **Etapa Activa:** `Etapa 1.1 — Constitucion del Proyecto`
+- **Etapa Activa:** `Etapa 1.2 — Validacion de Infraestructura`
 - **Capa Medallon Activa:** `N/A`
-- **Progreso Global:** 0% (0/11 etapas completadas formalmente — sin `docs/executives/` aun)
+- **Progreso Global:** 7.7% (1/13 etapas completadas — `docs/executives/f01_01_executive.md` existe)
 - **Documentos SDD Gobernantes** *(leer antes de decisiones arquitectonicas)*:
-  - PRD:    `docs/reqs/f01_01_prd.md` [Existe]
-  - SPEC:   `docs/specs/f01_01_spec.md` [Existe]
-  - Plan:   `docs/plans/f01_01_plan.md` [Existe]
-  - Tareas: `docs/tasks/f01_01_task.md` [Existe] (17/25 completadas — 68%)
+  - PRD:    `docs/reqs/f01_02_prd.md` [Pendiente — debe crearse al iniciar f01_02]
+  - SPEC:   `docs/specs/f01_02_spec.md` [Pendiente]
+  - Plan:   `docs/plans/f01_02_plan.md` [Pendiente]
+  - Tareas: `docs/tasks/f01_02_task.md` [Pendiente]
 
 ---
 
@@ -26,8 +26,8 @@
 
 ### Fase 1 — Gobernanza y Cimientos
 
-- [x] **Etapa 1.1** — Constitucion del Proyecto *(en ejecucion — pendiente commit y cierre formal)*
-- [ ] **Etapa 1.2** — Validacion de infraestructura: tablas Supabase, triggers, indices, permisos y conectividad
+- [x] **Etapa 1.1** — Constitucion del Proyecto *(CERRADA — 2026-03-27)*
+- [ ] **Etapa 1.2** — Validacion de infraestructura: tablas Supabase, triggers, indices, permisos y conectividad *(ACTIVA)*
 - [ ] **Etapa 1.3** — Data Contract: especificacion formal, validaciones y protocolo de rechazo
 
 ### Fase 2 — Prototipado y Validacion de Diseno
@@ -67,34 +67,44 @@
 | Protocolo de incidentes | `docs/references/incident-protocol.md` | Existe |
 | Glosario | `docs/references/glossary.md` | Existe |
 | Decisiones Arquitectonicas (ADR) | `docs/references/adr.md` | Existe |
-| Lecciones aprendidas | `docs/lessons/lessons-learned.md` | En progreso |
+| Lecciones aprendidas | `docs/lessons/lessons-learned.md` | Existe |
 | Skill router | `.claude/skill-router.md` | Existe |
-| Estado del proyecto (este archivo) | `PROJECT_handoff.md` | En progreso |
-| Esquema Supabase | `docs/database/schema.sql` | Pendiente |
+| Resumen Ejecutivo Etapa 1.1 | `docs/executives/f01_01_executive.md` | Existe (cierre formal) |
+| Estado del proyecto (este archivo) | `PROJECT_handoff.md` | Activo |
+| Esquema Supabase | `docs/database/schema.sql` | Pendiente — objetivo de Etapa 1.2 |
 
 ---
 
 ## 4. Indice SDD
 
-### Etapa Activa — Fase 1.1
+### Etapa Cerrada — Fase 1.1
 
 | Documento | Ruta | Estado |
 |---|---|---|
-| PRD Etapa 1.1 | `docs/reqs/f01_01_prd.md` | Existe |
-| SPEC Etapa 1.1 | `docs/specs/f01_01_spec.md` | Existe |
-| Plan Etapa 1.1 | `docs/plans/f01_01_plan.md` | Existe |
-| Tasks Etapa 1.1 | `docs/tasks/f01_01_task.md` | Existe (17/25 completadas) |
-| Executive Etapa 1.1 | `docs/executives/f01_01_executive.md` | Pendiente |
+| PRD Etapa 1.1 | `docs/reqs/f01_01_prd.md` | Cerrado |
+| SPEC Etapa 1.1 | `docs/specs/f01_01_spec.md` | Cerrado |
+| Plan Etapa 1.1 | `docs/plans/f01_01_plan.md` | Cerrado |
+| Tasks Etapa 1.1 | `docs/tasks/f01_01_task.md` | Cerrado (25/25 completadas) |
+| Executive Etapa 1.1 | `docs/executives/f01_01_executive.md` | Existe — cierre formal 2026-03-27 |
 
-*(Etapas anteriores cerradas: ninguna aun — primera etapa del proyecto)*
+### Etapa Activa — Fase 1.2
+
+| Documento | Ruta | Estado |
+|---|---|---|
+| PRD Etapa 1.2 | `docs/reqs/f01_02_prd.md` | Pendiente |
+| SPEC Etapa 1.2 | `docs/specs/f01_02_spec.md` | Pendiente |
+| Plan Etapa 1.2 | `docs/plans/f01_02_plan.md` | Pendiente |
+| Tasks Etapa 1.2 | `docs/tasks/f01_02_task.md` | Pendiente |
+| Executive Etapa 1.2 | `docs/executives/f01_02_executive.md` | Pendiente |
 
 ---
 
 ## 5. Notas y Decisiones Registradas
 
-- **2026-03-27** — Sesion #1: cadena SDD completa (PRD, SPEC, Plan, Tasks) redactada en una sola sesion para la Etapa 1.1. Los documentos reflejan el estado real: B1-B6 completados antes de esta sesion, B7-B9 pendientes.
+- **2026-03-27** — Sesion #1: cadena SDD completa (PRD, SPEC, Plan, Tasks) redactada para la Etapa 1.1. Los bloques B1-B6 completados antes de esta sesion, B7-B9 completados durante la sesion.
 - **2026-03-27** — Patron de trabajo con sdd-documenter validado: agente genera contenido markdown completo → orquestador escribe los archivos. El agente sdd-documenter no tiene herramienta Write; este es el flujo correcto.
-- **2026-03-27** — La SPEC de la Etapa 1.1 es de tipo DOCUMENTACION pura (sin esquemas Pandera, sin tablas SQL). Correcto para una etapa de gobernanza. El skill /stage-audit debe adaptar sus criterios a tipo DOCUMENTACION.
+- **2026-03-27** — La SPEC de la Etapa 1.1 es de tipo DOCUMENTACION pura (sin esquemas Pandera, sin tablas SQL). El skill /stage-audit adapta sus criterios a tipo DOCUMENTACION.
+- **2026-03-27** — Sesion #2: Etapa 1.1 cerrada formalmente. Auditoria /stage-audit emitio token CONFORME. Resumen Ejecutivo generado con /close-stage. Progreso del proyecto: 7.7% (1/13 etapas).
 
 ---
 
@@ -102,27 +112,27 @@
 
 ### Punto de Guardado
 
-- **Ultima actualizacion:** 2026-03-27, cierre de Sesion #1
-- **Fase / Etapa:** `Fase 1 — Etapa 1.1`
+- **Ultima actualizacion:** 2026-03-27, cierre de Sesion #2
+- **Fase / Etapa:** `Fase 1 — Etapa 1.2 (recien habilitada)`
 
 ### Archivos en el Escritorio (Working Set)
 
-- `docs/reqs/f01_01_prd.md` — PRD creado en esta sesion (9 REQs, 4 OBJs, 5 METs, 4 RSKs). Estado: Aprobado.
-- `docs/specs/f01_01_spec.md` — SPEC creada en esta sesion (8 componentes ARC-01 a ARC-08). Estado: Aprobado.
-- `docs/plans/f01_01_plan.md` — Plan creado en esta sesion (9 bloques B1-B9, ruta critica, DoD). Estado: Aprobado.
-- `docs/tasks/f01_01_task.md` — Task list creada en esta sesion (25 tareas, 17 completadas al 68%).
-- `PROJECT_handoff.md` — Este archivo, creado en el cierre de Sesion #1 (TSK-1-19).
+- `docs/executives/f01_01_executive.md` — Resumen Ejecutivo de la Etapa 1.1 creado en esta sesion. Artefacto de cierre formal.
+- `PROJECT_handoff.md` — Este archivo, actualizado para reflejar el cierre de f01_01 y la apertura de f01_02.
 
 ### Contexto Inmediato
 
-La cadena SDD completa de la Etapa 1.1 fue redactada y escrita en esta sesion. Los bloques B1-B6 (infraestructura base, CLAUDE.md, scope, referencias, PRD, SPEC, Plan) estan completados. Resta ejecutar B7-B9 y el cierre formal: crear handoff (hecho ahora), registrar lecciones, hacer commit de cierre SDD, auditar con /stage-audit y cerrar con /close-stage para generar el executive que habilita la Etapa 1.2.
+La Etapa 1.1 fue cerrada formalmente con el proceso completo: auditoría (/stage-audit obtuvo token CONFORME), cierre (/close-stage generó el ejecutivo). El gate de avance está satisfecho: `docs/executives/f01_01_executive.md` existe. La Etapa 1.2 está habilitada para iniciar.
+
+Para iniciar la Etapa 1.2 se debe crear primero la cadena SDD: PRD → SPEC → Plan → Tasks. El trabajo técnico de f01_02 consiste en verificar las tablas de Supabase del cliente (`usr_*`), configurar los permisos de acceso, probar la conectividad y documentar el esquema inicial en `docs/database/schema.sql`.
 
 ### Bloqueador / Ultimo Error
 
-Ninguno — la sesion cerro en estado limpio. El unico patron de friccion detectado fue que sdd-documenter no puede escribir archivos directamente (resuelto con el flujo orquestador-escritor validado).
+Ninguno. El proyecto avanza en estado limpio.
 
 ### Proxima Accion Inmediata
 
-1. Ejecutar commit de cierre SDD en `main` con los archivos: `docs/reqs/f01_01_prd.md`, `docs/specs/f01_01_spec.md`, `docs/plans/f01_01_plan.md`, `docs/tasks/f01_01_task.md`, `PROJECT_handoff.md`, `docs/lessons/lessons-learned.md` — usar `/git-push` o `git commit` con mensaje `docs: cadena SDD completa Etapa 1.1 — PRD, SPEC, Plan, Tasks y Handoff`.
-2. Ejecutar `/stage-audit f01_01` para verificar conformidad documental (criterio: tipo DOCUMENTACION).
-3. Ejecutar `/close-stage f01_01` para generar `docs/executives/f01_01_executive.md` y habilitar el inicio de la Etapa 1.2.
+1. Solicitar al usuario confirmacion para iniciar la Etapa 1.2.
+2. Crear `docs/reqs/f01_02_prd.md` usando `/sdd-prd` — requerimientos para validacion de infraestructura Supabase.
+3. Completar la cadena SDD f01_02: PRD → SPEC → Plan → Tasks.
+4. Prerequisito externo: el equipo debe tener credenciales de Supabase (URL del proyecto, service role key) antes de ejecutar las tareas de conectividad.
