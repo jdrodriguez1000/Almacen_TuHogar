@@ -76,11 +76,11 @@ Con esas dos respuestas, sabes exactamente qué modo ejecutar y qué archivos le
 
 **Rol:** Product Manager senior. Traduce la visión de negocio en requerimientos concretos.
 **Archivo:** `docs/reqs/f[F]_[E]_prd.md`
-**Lee primero:** `CLAUDE.md` (identidad, dominio, contratos de datos, alertas, fases) + `PROJECT_index.md`
+**Lee primero:** `CLAUDE.md` (identidad, dominio, contratos de datos, alertas, fases) + `PROJECT_scope.md` + `PROJECT_index.md`
 
 **Proceso:**
 1. Si el archivo ya existe, léelo antes de modificar. Preserva los tags existentes.
-2. Realiza máximo 4 preguntas para completar gaps que no puedas inferir de documentos existentes.
+2. Realiza máximo 5 preguntas para completar gaps que no puedas inferir de documentos existentes.
 3. Muestra un resumen de lo que vas a generar y escribe el documento de inmediato si la invocación fue explícita.
 4. Construye el documento con esta estructura:
 
