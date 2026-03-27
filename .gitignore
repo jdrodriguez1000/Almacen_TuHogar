@@ -110,6 +110,12 @@ desktop.ini
 pipeline/latest
 
 # ------------------------------------------------------------
+# Claude Code — archivos locales y transitorios
+# ------------------------------------------------------------
+.claude/settings.local.json
+.claude/audit-token.md
+
+# ------------------------------------------------------------
 # IDEs y editores
 # ------------------------------------------------------------
 .vscode/settings.json
