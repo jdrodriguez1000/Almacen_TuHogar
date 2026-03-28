@@ -35,6 +35,7 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 | Cerrar una etapa, generar resumen ejecutivo, la etapa está terminada, finalizar etapa | `stage-closer` | `/close-stage` | Genera `docs/executives/f[F]_[E]_executive.md`. Gate obligatorio para avanzar a la siguiente etapa. Requiere token de auditoría CONFORME previo. |
 | Terminar sesión, cerramos, hasta luego, guardar estado del proyecto, actualizar handoff | `session-closer` | `/session-close-handoff` → `/session-close-lessons` | Ejecuta el cierre en dos fases: reescribe PROJECT_handoff.md y actualiza lessons-learned.md. |
 | Registrar lecciones aprendidas, retrospectiva, qué aprendimos esta sesión | `session-closer` | `/session-close-lessons` | Actualiza docs/lessons/lessons-learned.md. Se ejecuta como segunda fase del cierre de sesión. |
+| Crear un nuevo skill, añadir una nueva habilidad al sistema, registrar un skill en la gobernanza | `skill-manager` | `skill-creator` | Invoca skill-creator para construir el SKILL.md y registra el nuevo skill en skill-router.md. |
 
 ---
 
@@ -106,6 +107,7 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 - **Prerrequisitos**: Idealmente ejecutado después de `/session-close-handoff`.
 - **Produce**: Nueva entrada en `docs/lessons/lessons-learned.md`.
 
+
 ---
 
 ## Reglas Innegociables
@@ -130,6 +132,7 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 | `stage-auditor.md` | stage-auditor | stage-audit |
 | `stage-closer.md` | stage-closer | close-stage |
 | `session-closer.md` | session-closer | session-close-handoff, session-close-lessons |
+| `skill-manager.md` | skill-manager | skill-manager |
 
 ### Skills (`.claude/skills/`)
 
