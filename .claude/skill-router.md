@@ -37,6 +37,10 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 | Registrar lecciones aprendidas, retrospectiva, qué aprendimos esta sesión | `session-closer` | `/session-close-lessons` | Actualiza docs/lessons/lessons-learned.md. Se ejecuta como segunda fase del cierre de sesión. |
 | Crear un nuevo skill, añadir una nueva habilidad al sistema, registrar un skill en la gobernanza | `skill-manager` | `skill-creator` | Invoca skill-creator para construir el SKILL.md y registra el nuevo skill en skill-router.md. |
 | Verificar o crear tablas en Supabase, habilitar RLS, crear policies, consultar information_schema, insertar en cuarentena, sincronizar schema.sql, verificar conectividad, auditar integridad de BD | `db-manager` | `/db-management` | Gestiona todas las operaciones de base de datos Supabase del proyecto: introspección, DDL tss_*, RLS, índices, conectividad y cuarentena. |
+| Implementar código Python del pipeline (TDD), crear ambiente virtual, requirements.txt, config.py, .env.example, o escribir tests pytest de conectividad e infraestructura | `general-purpose` | `/pipeline-code` | Implementa los archivos Python del pipeline siguiendo TDD estricto (Red → Green → Refactor). Gestiona TSK-2-01 a TSK-2-03 y TSK-2-10 a TSK-2-13. |
+| Implementar lógica de negocio del pipeline (validadores, ETL Bronze→Silver, capa Gold, motor de alertas), orquestadores en pipeline/pipelines/, módulos en pipeline/src/ | `pipeline-coder` | `/pipeline-code` | Implementa todo el código Python de negocio del pipeline siguiendo TDD estricto. Cubre validación, transformaciones ETL, métricas Gold y alertas determinísticas. |
+| Correr tests del pipeline, ejecutar pytest, verificar cobertura, diagnosticar tests fallidos, validar suite antes de commit o PR | `pipeline-tester` | `/pipeline-test` | Ejecuta la suite pytest de `pipeline/tests/`, interpreta resultados y reporta estado de cobertura. Gate de calidad antes de commits y PRs. |
+| Revisar calidad del código Python del pipeline, auditar convenciones, detectar hardcoding, verificar TDD y conformidad con estándares Triple S antes de commit o PR | `pipeline-reviewer` | `/pipeline-review` | Revisión estática de calidad del código en pipeline/. Detecta hardcoding, errores silenciados, ausencia de tests y violaciones de arquitectura. Emite dictamen APROBADO / APROBADO CON OBSERVACIONES / RECHAZADO. Gate previo a stage-auditor. |
 
 ---
 
@@ -108,6 +112,32 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 - **Prerrequisitos**: Idealmente ejecutado después de `/session-close-handoff`.
 - **Produce**: Nueva entrada en `docs/lessons/lessons-learned.md`.
 
+### /pipeline-code
+- **Descripción**: Implementa el código Python del pipeline de datos siguiendo TDD estricto (Red → Green → Refactor). Gestiona la creación del ambiente virtual `pipeline/.venv`, `pipeline/requirements.txt`, `pipeline/config.py` con `get_supabase_client()`, `pipeline/.env.example`, y la suite pytest completa `pipeline/tests/test_infra_connectivity.py` con sus 24 tests distribuidos en 6 clases. Las tareas que requieren conexión real a Supabase (`[TSK-2-02]`, `[TSK-2-10]` a `[TSK-2-13]`) están bloqueadas hasta que `pipeline/.env` tenga credenciales válidas.
+- **Disparadores**: "pipeline-code", "implementa el config", "crea el requirements", "escribe los tests de conectividad", "implementa la suite pytest", "crea el ambiente virtual", "configura el pipeline python", "implementa config.py", "crea requirements.txt", "tests de infraestructura", "suite pytest conectividad", "implementa get_supabase_client"
+- **Prerrequisitos**: Documentos SDD activos de Etapa 1.2 (`docs/reqs/f01_02_prd.md`, `docs/specs/f01_02_spec.md`, `docs/tasks/f01_02_task.md`). Credenciales Supabase en `pipeline/.env` para tareas `[TSK-2-02]`, `[TSK-2-10]` a `[TSK-2-13]`.
+- **Produce**: `pipeline/requirements.txt`, `pipeline/.venv/`, `pipeline/.env.example`, `pipeline/config.py`, `pipeline/tests/__init__.py`, `pipeline/tests/test_infra_connectivity.py` (24 tests, cobertura >= 90%).
+
+### /pipeline-code (pipeline-coder)
+- **Descripción**: Implementa lógica de negocio del pipeline de datos Python siguiendo TDD estricto (Red → Green → Refactor). Cubre validadores del Data Contract, ETL Bronze → Silver, capa Gold (métricas, clasificación ABC, márgenes), motor de alertas y orquestadores. Toda implementación parte de un test previo en `pipeline/tests/` que falla antes de existir el código.
+- **Disparadores**: "implementa el validador", "escribe el ETL", "crea la capa Gold", "motor de alertas", "lógica de cuarentena", "implementa pipeline/src/", "escribe el orquestador", "implementa las transformaciones", "crea las métricas Gold", "pipeline-coder"
+- **Prerrequisitos**: Documentos SDD activos de la etapa correspondiente (`prd`, `spec`, `plan`, `task`). `pipeline/.venv` creado. Para tareas con conexión Supabase: `pipeline/.env` con credenciales válidas.
+- **Produce**: Módulos Python en `pipeline/src/`, orquestadores en `pipeline/pipelines/`, tests en `pipeline/tests/` con cobertura >= 90%.
+
+### /pipeline-test
+- **Descripción**: Ejecuta la suite pytest de `pipeline/tests/`, interpreta los resultados y reporta el estado de cobertura. Gate de calidad antes de commits y PRs. No modifica código de producción — solo ejecuta, mide y reporta.
+- **Disparadores**: "corre los tests", "ejecuta pytest", "verifica la cobertura", "pasan los tests", "cuál es la cobertura", "tests del pipeline", "run tests", "lanza los tests", "ejecuta la suite", "qué tests fallan", "reporte de cobertura", "pipeline-test"
+- **Prerrequisitos**: `pipeline/.venv` activo con `pytest>=7.4.0` y `pytest-cov>=4.1.0` instalados. Para tests de integración: `pipeline/.env` con credenciales Supabase válidas.
+- **Produce**: Salida pytest con estado por clase de test, cobertura total (>= 90%) y diagnóstico de tests fallidos.
+- **Agente responsable**: `pipeline-tester`
+
+### /pipeline-review
+- **Descripción**: Revisión estática de calidad del código Python bajo `pipeline/`. Verifica ausencia de hardcoding, gestión correcta de errores con `ERR_MTD_XXX`, separación de responsabilidades, cobertura de tests TDD y convenciones de idioma. No modifica código ni ejecuta tests — solo lee, analiza y reporta hallazgos con nivel de severidad (CRITICO, ALTO, MEDIO, BAJO). Emite dictamen formal APROBADO / APROBADO CON OBSERVACIONES / RECHAZADO. Es el gate de calidad previo a `/stage-audit`.
+- **Disparadores**: "revisa el código", "audita el pipeline", "pipeline-review", "revisa la calidad", "verifica el código", "check code quality", "hay hardcoding", "cumple los estándares", "revisa las convenciones", "calidad del pipeline", "revisa antes del commit", "dictamen de calidad", "gate de calidad pipeline"
+- **Prerrequisitos**: Archivos Python existentes en `pipeline/src/`, `pipeline/pipelines/` o `pipeline/tests/`. Idealmente: confirmación de que `/pipeline-test` pasó con éxito.
+- **Produce**: Reporte de hallazgos por categoría con tabla consolidada y dictamen APROBADO / APROBADO CON OBSERVACIONES / RECHAZADO.
+- **Agente responsable**: `pipeline-reviewer`
+
 ### /db-management
 - **Descripción**: Especialista en gestión de base de datos Supabase. Ejecuta operaciones de introspección, DDL de tablas `tss_*`, RLS y policies `service_role`, verificación de índices, conectividad desde `pipeline/.env`, inserciones en cuarentena y auditoría de integridad. Canal preferido para introspección: MCP de Supabase. Canal para operaciones Python: `supabase-py`. DDL se aplica en Supabase Console y se sincroniza en `docs/database/schema.sql`.
 - **Disparadores**: "verifica las tablas", "crea las tablas tss", "habilita RLS", "conecta a Supabase", "revisa el schema", "gestión de BD", "db-management", "administra la base de datos", "introspección de base de datos", "verifica conectividad", "crea policy", "sincroniza schema.sql", "inserta en cuarentena", "audita la base de datos"
@@ -140,6 +170,9 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 | `session-closer.md` | session-closer | session-close-handoff, session-close-lessons |
 | `skill-manager.md` | skill-manager | skill-manager |
 | `db-manager.md` | db-manager | db-management |
+| `pipeline-coder.md` | pipeline-coder | pipeline-code |
+| `pipeline-tester.md` | pipeline-tester | pipeline-test |
+| `pipeline-reviewer.md` | pipeline-reviewer | pipeline-review |
 
 ### Skills (`.claude/skills/`)
 
@@ -157,3 +190,6 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 | `session-close-handoff/` | `/session-close-handoff` | session-closer |
 | `session-close-lessons/` | `/session-close-lessons` | session-closer |
 | `db-management/` | `/db-management` | db-manager |
+| `pipeline-code/` | `/pipeline-code` | general-purpose |
+| `pipeline-test/` | `/pipeline-test` | pipeline-tester |
+| `pipeline-review/` | `/pipeline-review` | pipeline-reviewer |
