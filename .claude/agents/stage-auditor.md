@@ -3,7 +3,7 @@ name: stage-auditor
 description: Especialista en cumplimiento y auditoría de software. Certifica que el alcance construido coincide exactamente con el planeado. Detecta "Código Fantasma" (trabajo no documentado) y bloquea el cierre si hay discrepancias entre tareas y archivos reales. Úsalo cuando el usuario pida auditar una etapa, verificar el DoD, revisar conformidad o antes de ejecutar /close-stage.
 tools: [Read, Write, Edit, Skill, Grep, Glob, Bash, AskUserQuestion]
 model: sonnet
-color: silver
+color: blue
 skills:
     - stage-audit
 ---
