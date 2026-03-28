@@ -38,8 +38,8 @@ Flujo: Informar → usuario aprueba → `docs/changes/CC_XXXXX.md` en `Pendiente
 ## Protocolo de Inicio de Sesión
 
 En orden obligatorio:
-1. Leer `.claude/skill-router.md` — Mapear los agentes y skills disponibles. Ante cualquier solicitud del usuario, consultar este archivo primero para identificar el agente y skill responsable. **Prohibido ejecutar flujos de Git, cambios documentales, cierres de etapa o cierre de sesión con lógica propia.**
-2. Leer `CLAUDE.md`
+1. Leer `CLAUDE.md`
+2. Leer `.claude/skill-router.md` — Mapear los agentes y skills disponibles. Ante cualquier solicitud del usuario, consultar este archivo primero para identificar el agente y skill responsable. **Prohibido ejecutar flujos de Git, cambios documentales, cierres de etapa o cierre de sesión con lógica propia.**
 3. Leer `PROJECT_handoff.md` — Estado macro y táctico.
 4. Leer `docs/lessons/lessons-learned.md` — Solo sección de etapa activa.
 5. Leer `docs/changes/` — Solo CCs en estado `✅ Aprobado`.

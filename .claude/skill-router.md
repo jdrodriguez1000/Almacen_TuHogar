@@ -36,6 +36,7 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 | Terminar sesión, cerramos, hasta luego, guardar estado del proyecto, actualizar handoff | `session-closer` | `/session-close-handoff` → `/session-close-lessons` | Ejecuta el cierre en dos fases: reescribe PROJECT_handoff.md y actualiza lessons-learned.md. |
 | Registrar lecciones aprendidas, retrospectiva, qué aprendimos esta sesión | `session-closer` | `/session-close-lessons` | Actualiza docs/lessons/lessons-learned.md. Se ejecuta como segunda fase del cierre de sesión. |
 | Crear un nuevo skill, añadir una nueva habilidad al sistema, registrar un skill en la gobernanza | `skill-manager` | `skill-creator` | Invoca skill-creator para construir el SKILL.md y registra el nuevo skill en skill-router.md. |
+| Verificar o crear tablas en Supabase, habilitar RLS, crear policies, consultar information_schema, insertar en cuarentena, sincronizar schema.sql, verificar conectividad, auditar integridad de BD | `db-manager` | `/db-management` | Gestiona todas las operaciones de base de datos Supabase del proyecto: introspección, DDL tss_*, RLS, índices, conectividad y cuarentena. |
 
 ---
 
@@ -107,6 +108,11 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 - **Prerrequisitos**: Idealmente ejecutado después de `/session-close-handoff`.
 - **Produce**: Nueva entrada en `docs/lessons/lessons-learned.md`.
 
+### /db-management
+- **Descripción**: Especialista en gestión de base de datos Supabase. Ejecuta operaciones de introspección, DDL de tablas `tss_*`, RLS y policies `service_role`, verificación de índices, conectividad desde `pipeline/.env`, inserciones en cuarentena y auditoría de integridad. Canal preferido para introspección: MCP de Supabase. Canal para operaciones Python: `supabase-py`. DDL se aplica en Supabase Console y se sincroniza en `docs/database/schema.sql`.
+- **Disparadores**: "verifica las tablas", "crea las tablas tss", "habilita RLS", "conecta a Supabase", "revisa el schema", "gestión de BD", "db-management", "administra la base de datos", "introspección de base de datos", "verifica conectividad", "crea policy", "sincroniza schema.sql", "inserta en cuarentena", "audita la base de datos"
+- **Prerrequisitos**: `pipeline/.env` con `SUPABASE_URL` y `SUPABASE_SERVICE_KEY`. Para DDL/RLS que modifiquen estructura existente: CC aprobado en `docs/changes/`.
+- **Produce**: Tablas `tss_*` verificadas o creadas en Supabase; `docs/database/schema.sql` sincronizado; reportes de integridad y RLS; registros en `tss_cuarentena_*` cuando aplique.
 
 ---
 
@@ -133,6 +139,7 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 | `stage-closer.md` | stage-closer | close-stage |
 | `session-closer.md` | session-closer | session-close-handoff, session-close-lessons |
 | `skill-manager.md` | skill-manager | skill-manager |
+| `db-manager.md` | db-manager | db-management |
 
 ### Skills (`.claude/skills/`)
 
@@ -149,3 +156,4 @@ Al iniciar una nueva sesión o ventana de chat, ejecutar en este orden:
 | `close-stage/` | `/close-stage` | stage-closer |
 | `session-close-handoff/` | `/session-close-handoff` | session-closer |
 | `session-close-lessons/` | `/session-close-lessons` | session-closer |
+| `db-management/` | `/db-management` | db-manager |
