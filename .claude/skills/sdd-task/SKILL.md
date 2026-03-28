@@ -115,11 +115,13 @@ GRUPO PARALELO 2 (luego de TSK-F-03 y TSK-F-04):
 ## Bloque 1 — [Nombre del Bloque (B1 del Plan)]
 
 - [ ] `[TSK-F-01]` [Acción técnica concreta: verbo + qué + dónde] _(independiente)_
+  - **Agente responsable**: [nombre del agente]
   - **REQ que implementa**: [REQ-XX]
   - **Archivos**: `[ruta/archivo]`
   - **DoD**: [Criterio verificable de completitud]
 
 - [ ] `[TSK-F-02]` [Acción técnica concreta] _(parallel_with: TSK-F-01)_
+  - **Agente responsable**: [nombre del agente]
   - **REQ que implementa**: [REQ-XX]
   - **Archivos**: `[ruta/archivo]`
   - **DoD**: [Criterio verificable]
@@ -127,6 +129,7 @@ GRUPO PARALELO 2 (luego de TSK-F-03 y TSK-F-04):
 ## Bloque 2 — [Nombre del Bloque (B2 del Plan)]
 
 - [ ] `[TSK-F-03]` [Acción técnica concreta] _(depends_on: TSK-F-01)_
+  - **Agente responsable**: [nombre del agente]
   - **REQ que implementa**: [REQ-XX]
   - **Componente [ARC]**: [ARC-XX]
   - **Archivos**: `src/[modulo].py`
@@ -134,21 +137,44 @@ GRUPO PARALELO 2 (luego de TSK-F-03 y TSK-F-04):
 
 ## Cierre de Etapa
 
+> **Responsabilidades de cierre:**
+> - `PROJECT_handoff.md` → lo actualiza `session-closer` al **cerrar la sesión**, no al cerrar la etapa.
+> - El cierre de etapa tiene dos pasos: (1) auditoría con `/stage-audit` y (2) ejecutivo con `/close-stage`.
+
 - [ ] `[TSK-F-XX]` Ejecutar suite completa: `pytest pipeline/tests/ --cov=src` — cobertura ≥ 90% _(depends_on: todas las tareas anteriores)_
+  - **Agente responsable**: `general-purpose`
 - [ ] `[TSK-F-XX]` Verificar persistencia triple: archivo local + log timestamp + `tss_pipeline_log` _(parallel_with: tarea anterior)_
-- [ ] `[TSK-F-XX]` Actualizar `PROJECT_handoff.md` con estado final _(parallel_with: tarea anterior)_
-- [ ] `[TSK-F-XX]` Crear commit atómico en `feat/etapa-[F]-[E]`: `feat: etapa [F].[E] completada` _(depends_on: todas las tareas de cierre)_
+  - **Agente responsable**: `general-purpose`
+- [ ] `[TSK-F-XX]` Ejecutar auditoría de etapa `/stage-audit f[F]_[E]` _(depends_on: todas las tareas anteriores)_
+  - **Agente responsable**: `stage-auditor`
+- [ ] `[TSK-F-XX]` Ejecutar cierre formal `/close-stage f[F]_[E]` — genera `docs/executives/f[F]_[E]_executive.md` _(depends_on: auditoría aprobada)_
+  - **Agente responsable**: `stage-closer`
+- [ ] `[TSK-F-XX]` Crear commit atómico en `feat/etapa-[F]-[E]`: `feat: etapa [F].[E] completada` _(depends_on: ejecutivo generado)_
+  - **Agente responsable**: `git-pusher`
 ```
 
+---
+
+## Tabla de Agentes Disponibles
+
+**Regla**: toda tarea debe tener un agente asignado.  El `**Agente responsable**` se asigna según la naturaleza de cada tarea. Si ninguno encaja, usar `general-purpose`.
+
+Ejemplos:
+| Agente | Tipo de tareas |
+|---|---|
+| `db-management` | Introsección Supabase, DDL (`tss_*`), RLS, índices, cuarentena, sincronizar `schema.sql` |
+| `stage-auditor` | Auditoría de cierre de etapa (`/stage-audit`) |
+| `update-config` | Configurar MCP, `settings.local.json`, variables de entorno, herramientas del agente |
 ---
 
 ## Reglas de Calidad Irrenunciables
 
 1. **Granularidad correcta**: cada tarea toma 1-3 días, no más. Si es mayor, descomponerla.
 2. **Anotación obligatoria**: toda tarea DEBE tener `(independiente)`, `(depends_on: ...)` o `(parallel_with: ...)`.
-3. **Trazabilidad vertical**: cada `[TSK]` conecta a un `[REQ]` del PRD.
-4. **No borrar completadas**: `[x]` es evidencia histórica — inmutable.
-5. **DoD por tarea**: cada tarea tiene un criterio verificable de "cuándo está realmente hecha".
+3. **Agente responsable obligatorio**: toda tarea DEBE tener `**Agente responsable**` asignado desde la tabla de agentes.
+4. **Trazabilidad vertical**: cada `[TSK]` conecta a un `[REQ]` del PRD.
+5. **No borrar completadas**: `[x]` es evidencia histórica — inmutable.
+6. **DoD por tarea**: cada tarea tiene un criterio verificable de "cuándo está realmente hecha".
 
 ---
 

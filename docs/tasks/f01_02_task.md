@@ -3,8 +3,8 @@
 > Trazabilidad: Estas tareas implementan `docs/plans/f01_02_plan.md`.
 > Actualiza marcando `[x]` al completar. **NUNCA borres tareas completadas.**
 > Documento: `docs/tasks/f01_02_task.md`
-> Versión: 1.0
-> Fecha: 2026-03-28
+> Versión: 1.1
+> Fecha: 2026-03-28 (v1.1: corrección flujo de cierre de etapa — TSK-2-16 y TSK-2-18)
 > Elaborado por: Triple S (Sabbia Solutions & Services)
 
 ## Convenciones de Anotación
@@ -53,8 +53,9 @@ BLOQUE 5 — Sincronizar schema.sql + configurar MCP (depends_on: TSK-2-13):
   TSK-2-15 → Configurar MCP de Supabase en .claude/settings.json  ← paralela con TSK-2-14
 
 CIERRE (depends_on: TSK-2-14 + TSK-2-15):
-  TSK-2-16 → Actualizar PROJECT_handoff.md
-  TSK-2-17 → Crear commit atómico en feat/etapa-1-2  ← depends_on: TSK-2-16
+  TSK-2-16 → Ejecutar auditoría de etapa (/stage-audit — agente stage-auditor)
+  TSK-2-18 → Ejecutar cierre formal (/close-stage — agente stage-closer)  ← depends_on: TSK-2-16
+  TSK-2-17 → Crear commit atómico en feat/etapa-1-2  ← depends_on: TSK-2-18
 ```
 
 ---
@@ -62,6 +63,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
 ## Bloque 1 — Setup de Entorno Local
 
 - [ ] `[TSK-2-01]` Crear el ambiente virtual Python en `pipeline/.venv` e instalar las 4 dependencias desde `pipeline/requirements.txt` _(independiente — tras credenciales disponibles)_
+  - **Agente responsable**: `general-purpose`
   - **REQ que implementa**: `[DAT-05]`, `[REQ-12]` (infraestructura base)
   - **Componente [ARC]**: `[ARC-06]`
   - **Archivos**: `pipeline/requirements.txt`, `pipeline/.venv/`
@@ -73,6 +75,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
   - **DoD**: `pip list` dentro del `.venv` muestra `supabase`, `python-dotenv`, `pytest`, `pytest-cov` con versiones conformes. `.venv/` listado en `.gitignore`.
 
 - [ ] `[TSK-2-02]` Crear `pipeline/.env` con credenciales reales y `pipeline/.env.example` con placeholders versionado en Git _(parallel_with: TSK-2-01)_
+  - **Agente responsable**: `general-purpose`
   - **REQ que implementa**: `[DAT-05]`
   - **Componente [ARC]**: `[ARC-06]`
   - **Archivos**: `pipeline/.env`, `pipeline/.env.example`, `.gitignore`
@@ -84,6 +87,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
   - **DoD**: `pipeline/.env` existe localmente y NO aparece en `git status`. `pipeline/.env.example` aparece versionado con placeholders.
 
 - [ ] `[TSK-2-03]` Implementar `pipeline/config.py` con la función `get_supabase_client()` _(depends_on: TSK-2-01, TSK-2-02)_
+  - **Agente responsable**: `general-purpose`
   - **REQ que implementa**: `[REQ-12]`, `[DAT-05]`
   - **Componente [ARC]**: `[ARC-06]`
   - **Archivos**: `pipeline/config.py`
@@ -103,6 +107,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
 ## Bloque 2 — Verificar Tablas `usr_*` en Supabase
 
 - [ ] `[TSK-2-04]` Verificar existencia y estructura de `usr_ventas` y `usr_inventario` mediante consultas a `information_schema` _(depends_on: TSK-2-03)_
+  - **Agente responsable**: `db-management`
   - **REQ que implementa**: `[REQ-01]`, `[REQ-02]`
   - **Componente [ARC]**: `[ARC-01]`
   - **Riesgo activo**: `[RSK-02]`, `[RSK-03]`
@@ -115,6 +120,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
   - **DoD**: Confirmación documentada de ambas tablas con columnas requeridas. Discrepancias registradas en `schema.sql`. `[MET-01]` parcialmente verificada.
 
 - [ ] `[TSK-2-05]` Verificar existencia y estructura de `usr_productos` y `usr_sedes`, incluyendo conteos y estado RLS _(parallel_with: TSK-2-04)_
+  - **Agente responsable**: `db-management`
   - **REQ que implementa**: `[REQ-03]`, `[REQ-04]`
   - **Componente [ARC]**: `[ARC-01]`
   - **Riesgo activo**: `[RSK-02]`, `[RSK-03]`, `[RSK-04]`
@@ -131,6 +137,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
 ## Bloque 3 — Aprovisionar Tablas `tss_*` en Supabase
 
 - [ ] `[TSK-2-06]` Redactar DDL en `docs/database/schema.sql` para `tss_pipeline_log`, `tss_cuarentena_ventas` y `tss_cuarentena_inventario` _(parallel_with: TSK-2-04)_
+  - **Agente responsable**: `db-management`
   - **REQ que implementa**: `[REQ-08]`
   - **Componente [ARC]**: `[ARC-02]`, `[ARC-04]`
   - **Archivos**: `docs/database/schema.sql`
@@ -142,6 +149,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
   - **DoD**: 3 bloques DDL en `schema.sql` con sintaxis SQL válida.
 
 - [ ] `[TSK-2-07]` Redactar DDL en `docs/database/schema.sql` para las tablas Bronze y Silver _(parallel_with: TSK-2-06)_
+  - **Agente responsable**: `db-management`
   - **REQ que implementa**: `[REQ-05]`, `[REQ-06]`
   - **Componente [ARC]**: `[ARC-02]`, `[ARC-04]`
   - **Archivos**: `docs/database/schema.sql`
@@ -153,6 +161,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
   - **DoD**: 4 bloques DDL (2 Bronze + 2 Silver) con CHECKs conformes a la SPEC sección 2.1.
 
 - [ ] `[TSK-2-08]` Redactar DDL para tablas Gold y ejecutar el DDL completo de `schema.sql` en Supabase SQL Editor _(depends_on: TSK-2-06, TSK-2-07)_
+  - **Agente responsable**: `db-management`
   - **REQ que implementa**: `[REQ-05]`–`[REQ-08]`
   - **Componente [ARC]**: `[ARC-02]`, `[ARC-04]`
   - **Archivos**: `docs/database/schema.sql`
@@ -165,6 +174,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
   - **DoD**: Consulta de verificación retorna exactamente 10. `[MET-02]` verificada.
 
 - [ ] `[TSK-2-09]` Habilitar RLS y crear policies `service_role` en las 10 tablas `tss_*`, verificar índices de performance _(depends_on: TSK-2-08)_
+  - **Agente responsable**: `db-management`
   - **REQ que implementa**: `[REQ-09]`, `[REQ-10]`, `[REQ-11]`
   - **Componente [ARC]**: `[ARC-05]`
   - **Riesgo activo**: `[RSK-05]`
@@ -182,6 +192,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
 ## Bloque 4 — Suite pytest de Conectividad
 
 - [ ] `[TSK-2-10]` Implementar (TDD) `TestEnvironmentConfig` y `TestSupabaseConnectivity` _(depends_on: TSK-2-03, TSK-2-05, TSK-2-09)_
+  - **Agente responsable**: `general-purpose`
   - **REQ que implementa**: `[REQ-12]`
   - **Componente [ARC]**: `[ARC-03]`, `[ARC-06]`
   - **Archivos**: `pipeline/tests/__init__.py`, `pipeline/tests/test_infra_connectivity.py`
@@ -192,6 +203,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
   - **DoD**: `pytest tests/test_infra_connectivity.py::TestEnvironmentConfig tests/test_infra_connectivity.py::TestSupabaseConnectivity -v` → 5/5 pasan, exit code 0.
 
 - [ ] `[TSK-2-11]` Implementar (TDD) `TestClientTableStructure` con 10 tests para las 4 tablas `usr_*` _(parallel_with: TSK-2-10)_
+  - **Agente responsable**: `general-purpose`
   - **REQ que implementa**: `[REQ-01]`–`[REQ-04]`
   - **Componente [ARC]**: `[ARC-01]`, `[ARC-03]`
   - **Archivos**: `pipeline/tests/test_infra_connectivity.py`
@@ -204,6 +216,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
   - **DoD**: `pytest tests/test_infra_connectivity.py::TestClientTableStructure -v` → 10/10 pasan, exit code 0.
 
 - [ ] `[TSK-2-12]` Implementar (TDD) `TestTripleSTableStructure` (4 tests) y `TestRLSPolicies` (4 tests) _(depends_on: TSK-2-10, TSK-2-11)_
+  - **Agente responsable**: `general-purpose`
   - **REQ que implementa**: `[REQ-09]`, `[REQ-10]`, `[REQ-12]`
   - **Componente [ARC]**: `[ARC-03]`, `[ARC-05]`
   - **Archivos**: `pipeline/tests/test_infra_connectivity.py`
@@ -212,6 +225,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
   - **DoD**: `pytest ::TestTripleSTableStructure ::TestRLSPolicies -v` → 8/8 pasan. No quedan registros de prueba en `tss_pipeline_log`.
 
 - [ ] `[TSK-2-13]` Implementar `TestPerformanceIndexes` y ejecutar la suite completa con cobertura _(depends_on: TSK-2-12)_
+  - **Agente responsable**: `general-purpose`
   - **REQ que implementa**: `[REQ-11]`, `[REQ-12]`
   - **Componente [ARC]**: `[ARC-03]`, `[ARC-05]`
   - **Archivos**: `pipeline/tests/test_infra_connectivity.py`
@@ -228,6 +242,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
 ## Bloque 5 — Sincronizar `schema.sql` y Configurar MCP
 
 - [ ] `[TSK-2-14]` Finalizar y sincronizar `docs/database/schema.sql` con el estado real confirmado de Supabase _(depends_on: TSK-2-13)_
+  - **Agente responsable**: `db-management`
   - **REQ que implementa**: `[REQ-13]`
   - **Componente [ARC]**: `[ARC-04]`
   - **Archivos**: `docs/database/schema.sql`
@@ -240,6 +255,7 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
   - **DoD**: DDL reproducible sin errores de sintaxis. Sección 1 refleja estructura real. `[MET-05]` verificada.
 
 - [ ] `[TSK-2-15]` Configurar el MCP de Supabase en `.claude/settings.local.json` con el Personal Access Token _(parallel_with: TSK-2-14)_
+  - **Agente responsable**: `update-config`
   - **REQ que implementa**: extensión de `[REQ-12]` para agentes
   - **Componente [ARC]**: `[ARC-04]`
   - **Archivos**: `.claude/settings.local.json`
@@ -255,24 +271,34 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
 
 ## Cierre de Etapa
 
-- [ ] `[TSK-2-16]` Actualizar `PROJECT_handoff.md` con el estado final de la Etapa 1.2 _(depends_on: TSK-2-14, TSK-2-15)_
-  - **Archivos**: `PROJECT_handoff.md`
-  - **Contenido mínimo**:
-    - Archivos creados/modificados en la etapa
-    - Estado real medido de cada métrica `[MET-01]` a `[MET-07]`
-    - Discrepancias encontradas y su resolución o CC abierto
-    - Próxima acción: inicio de Etapa 1.3 — Data Contract
-    - Bloqueos pendientes (índices, RLS de `usr_*`, etc.)
-  - **DoD**: Un agente que lea `PROJECT_handoff.md` puede iniciar Etapa 1.3 sin contexto adicional.
+> **Nota sobre responsabilidades de cierre:**
+> La actualización de `PROJECT_handoff.md` es responsabilidad exclusiva del agente `session-closer`
+> (skill `/session-close-handoff`), y ocurre al **cerrar la sesión de trabajo**, no al cerrar la etapa.
+> El cierre formal de una etapa tiene dos pasos distintos: (1) auditoría con `/stage-audit` y
+> (2) generación del ejecutivo con `/close-stage`. Son procesos separados que pueden ocurrir en
+> sesiones distintas.
 
-- [ ] `[TSK-2-17]` Crear commit atómico en rama `feat/etapa-1-2` con todos los archivos de la etapa _(depends_on: TSK-2-16)_
+- [ ] `[TSK-2-16]` Ejecutar auditoría de etapa invocando `/stage-audit f01_02` (agente `stage-auditor`) _(depends_on: TSK-2-14, TSK-2-15)_
+  - **Agente responsable**: `stage-auditor` — skill `/stage-audit`
+  - **Qué hace**: verifica que cada tarea completada tiene evidencia física (código, tests, documentos); detecta código no documentado; produce reporte de conformidad.
+  - **Archivos**: el agente genera su propio reporte de auditoría
+  - **DoD**: `/stage-audit f01_02` finaliza sin gaps bloqueantes. Si hay gaps, abrirlos como CCs o resolverlos antes de continuar a TSK-2-18.
+
+- [ ] `[TSK-2-18]` Ejecutar cierre formal de etapa invocando `/close-stage f01_02` (agente `stage-closer`) _(depends_on: TSK-2-16)_
+  - **Agente responsable**: `stage-closer` — skill `/close-stage`
+  - **Qué hace**: genera el documento ejecutivo `docs/executives/f01_02_executive.md` que certifica el cierre formal de la Etapa 1.2 y habilita el avance a la Etapa 1.3.
+  - **Archivos**: `docs/executives/f01_02_executive.md`
+  - **DoD**: el archivo `docs/executives/f01_02_executive.md` existe y contiene el resumen ejecutivo de la etapa. Este archivo es el prerrequisito para que `CLAUDE.md` autorice el avance a Etapa 1.3.
+
+- [ ] `[TSK-2-17]` Crear commit atómico en rama `feat/etapa-1-2` con todos los archivos de la etapa _(depends_on: TSK-2-18)_
+  - **Agente responsable**: `git-pusher`
   - **Archivos**: todos los creados/modificados en la etapa
   - **Pasos**:
     1. Verificar rama activa: `feat/etapa-1-2` (crear si no existe)
-    2. Stagear: `git add pipeline/config.py pipeline/requirements.txt pipeline/.env.example pipeline/tests/ docs/database/schema.sql PROJECT_handoff.md`
+    2. Stagear: `git add pipeline/config.py pipeline/requirements.txt pipeline/.env.example pipeline/tests/ docs/database/schema.sql docs/executives/f01_02_executive.md`
     3. Verificar que `pipeline/.env` y `.claude/settings.local.json` NO están en el staging area
     4. `git commit -m "feat: etapa 1.2 completada — infraestructura Supabase certificada"`
-  - **DoD**: Commit creado. `pipeline/.env` y `.claude/settings.local.json` ausentes del commit.
+  - **DoD**: Commit creado. `pipeline/.env` y `.claude/settings.local.json` ausentes del commit. `docs/executives/f01_02_executive.md` incluido en el commit.
 
 ---
 
@@ -295,5 +321,6 @@ CIERRE (depends_on: TSK-2-14 + TSK-2-15):
 | `[TSK-2-13]` | B4 | `[ARC-03]`, `[ARC-05]` | `[REQ-11]`, `[REQ-12]` | `[MET-03]` |
 | `[TSK-2-14]` | B5 | `[ARC-04]` | `[REQ-13]` | `[MET-05]` |
 | `[TSK-2-15]` | B5 | `[ARC-04]` | `[REQ-12]` extensión | — |
-| `[TSK-2-16]` | Cierre | — | Protocolo `CLAUDE.md` | `[MET-01]`–`[MET-07]` (reporte) |
+| `[TSK-2-16]` | Cierre | — | Protocolo cierre de etapa (`CLAUDE.md`) | Verificación de conformidad |
+| `[TSK-2-18]` | Cierre | — | Protocolo cierre de etapa (`CLAUDE.md`) | Generación `docs/executives/f01_02_executive.md` |
 | `[TSK-2-17]` | Cierre | — | Git Flow `CLAUDE.md` | — |

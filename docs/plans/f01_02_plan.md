@@ -255,5 +255,8 @@ La Etapa 1.2 se considera completada cuando **todos** los siguientes ítems est�
 - [ ] MCP de Supabase configurado y operativo en Claude Code
 
 **Cierre:**
+- [ ] Auditoría de etapa ejecutada con `/stage-audit f01_02` (agente `stage-auditor`) — sin gaps bloqueantes
+- [ ] Cierre formal ejecutado con `/close-stage f01_02` (agente `stage-closer`) — genera `docs/executives/f01_02_executive.md`
 - [ ] Commit atómico en `feat/etapa-1-2`: `feat: etapa 1.2 completada — infraestructura Supabase certificada`
-- [ ] `PROJECT_handoff.md` actualizado con estado final de la etapa
+
+> **Nota:** La actualización de `PROJECT_handoff.md` es responsabilidad del agente `session-closer` al cerrar la sesión de trabajo, no del cierre de etapa.
